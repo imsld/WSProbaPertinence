@@ -1,15 +1,19 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReadResults {
+public class ReadResultsRelevanceSet	 {
 	private String pathResult;
+	private String pathRelevanceSet;
+	private String typeRequestRelevanceSet;
 	private int totalResult;
-	private List<Request> listRequests;
+	private List<Request> listRequests = new ArrayList<Request>();
 	private File repertoireResult;
 	
-	public ReadResults(String pathResult) {
+	public ReadResultsRelevanceSet(String pathResult, String pathRelevanceSet) {
 		super();
 		this.pathResult = pathResult;
+		this.pathRelevanceSet = pathRelevanceSet;
 		setTotalResult();
 		setListRequests();
 	}
@@ -19,13 +23,14 @@ public class ReadResults {
 		totalResult = repertoireResult.listFiles().length;
 	}
 	
-	public void setListRequests() {
+	private void setListRequests() {
 		String requestName; 
 		File[] f = repertoireResult.listFiles();
 		for (int i = 0; i < totalResult; i++) {
 			 if (f[i].isDirectory()) {
 				 requestName = f[i].getName();
-				 Request req = new Request(i, requestName);
+				 Request req = new Request(pathResult, pathRelevanceSet, i, requestName);
+				 listRequests.add(req);
 			 }
 		}
 	}
