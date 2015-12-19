@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns="http://127.0.0.1/services/1.1/CheckRoomAvailability_service.owls#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:HospRcp="http://127.0.0.1/ontology/HospitalReceptionOntology.owl#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/CheckRoomAvailability_service.owls">
+  <owl:Ontology rdf:about="">
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/HospitalReceptionOntology.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+  </owl:Ontology>
+  <process:InputBinding rdf:ID="InputBinding_45">
+    <process:valueSource>
+      <process:ValueOf rdf:ID="ValueOf_46">
+        <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+        <process:theVar>
+          <process:Input rdf:ID="CheckHospitalAvailability_TreatmentRecomendation">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#Treatment</process:parameterType>
+          </process:Input>
+        </process:theVar>
+      </process:ValueOf>
+    </process:valueSource>
+  </process:InputBinding>
+  
+  <process:InputBinding rdf:ID="InputBinding_30">
+    <process:valueSource>
+      <process:ValueOf rdf:ID="ValueOf_31">
+        <process:theVar rdf:resource="#CheckHospitalAvailability_TreatmentRecomendation"/>
+        <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+      </process:ValueOf>
+    </process:valueSource>
+    <process:toParam rdf:resource="#CheckEquipmentAvailability_TreatmentRecomendation"/>
+  </process:InputBinding>
+  <service:Service rdf:ID="CheckRoomAvailability">
+    <service:describedBy>
+      <process:AtomicProcess rdf:ID="CheckRoomAvailability_Model">
+        <process:hasInput>
+          <process:Input rdf:ID="CheckRoomAvailability_TreatmentDate">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#DateTime</process:parameterType>
+          </process:Input>
+        </process:hasInput>
+        <process:hasOutput>
+          <process:Output rdf:ID="CheckRoomAvailability_AvailabilityResponse">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#AvailabilityResponse</process:parameterType>
+          </process:Output>
+        </process:hasOutput>
+        <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CheckRoomAvailability</process:name>
+        <process:hasInput>
+          <process:Input rdf:ID="CheckRoomAvailability_TreatmentRecomendation">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#Treatment</process:parameterType>
+          </process:Input>
+        </process:hasInput>
+        <service:describes rdf:resource="#CheckRoomAvailability"/>
+      </process:AtomicProcess>
+    </service:describedBy>
+    <service:presents>
+      <profile:Profile rdf:ID="CheckRoomAvailability_Profile">
+        <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This service checks the room availability for a desired treatment</profile:textDescription>
+        <profile:hasInput rdf:resource="#CheckRoomAvailability_TreatmentRecomendation"/>
+        <profile:hasOutput rdf:resource="#CheckRoomAvailability_AvailabilityResponse"/>
+        <service:presentedBy rdf:resource="#CheckRoomAvailability"/>
+        <profile:hasInput rdf:resource="#CheckRoomAvailability_TreatmentDate"/>
+        <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CheckRoomAvailability</profile:serviceName>
+      </profile:Profile>
+    </service:presents>
+    <service:supports>
+      <grounding:WsdlGrounding rdf:ID="CheckRoomAvailability_Grounding">
+        <grounding:hasAtomicProcessGrounding>
+          <grounding:WsdlAtomicProcessGrounding rdf:ID="CheckRoomAvailability_WsdlAtomicProcessGrounding">
+            <grounding:owlsProcess rdf:resource="#CheckRoomAvailability_Model"/>
+          </grounding:WsdlAtomicProcessGrounding>
+        </grounding:hasAtomicProcessGrounding>
+        <service:supportedBy rdf:resource="#CheckRoomAvailability"/>
+      </grounding:WsdlGrounding>
+    </service:supports>
+  </service:Service>
+ </rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

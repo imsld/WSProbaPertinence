@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns="http://127.0.0.1/services/1.1/ApothecaryServices.owls#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:Apo="http://127.0.0.1/ontology/ApothecaryOntology.owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/ApothecaryServices.owls">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/ApothecaryOntology.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+  </owl:Ontology>
+  <process:AtomicProcess rdf:ID="GetDrugInformation_Model">
+    <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GetDrugInformation</process:name>
+    <service:describes>
+      <service:Service rdf:ID="GetDrugInformation">
+        <service:describedBy rdf:resource="#GetDrugInformation_Model"/>
+        <service:presents>
+          <profile:Profile rdf:ID="GetDrugInformation_Profile">
+            <profile:hasOutput>
+              <process:Output rdf:ID="GetDrugInformation_RequiredDrugs">
+                <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/ApothecaryOntology.owl#Drug</process:parameterType>
+              </process:Output>
+            </profile:hasOutput>
+            <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Delivers the needed drug names for a treatment</profile:textDescription>
+            <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GetDrugInformation</profile:serviceName>
+            <profile:hasInput>
+              <process:Input rdf:ID="GetDrugInformation_TreatmentIInformation">
+                <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/ApothecaryOntology.owl#Treatment</process:parameterType>
+              </process:Input>
+            </profile:hasInput>
+            <service:presentedBy rdf:resource="#GetDrugInformation"/>
+          </profile:Profile>
+        </service:presents>
+        <service:supports>
+          <grounding:WsdlGrounding rdf:ID="GetDrugInformation_Grounding">
+            <service:supportedBy rdf:resource="#GetDrugInformation"/>
+            <grounding:hasAtomicProcessGrounding>
+              <grounding:WsdlAtomicProcessGrounding rdf:ID="GetDrugInformation_WsdlAtomicProcessGrounding">
+                <grounding:owlsProcess rdf:resource="#GetDrugInformation_Model"/>
+              </grounding:WsdlAtomicProcessGrounding>
+            </grounding:hasAtomicProcessGrounding>
+          </grounding:WsdlGrounding>
+        </service:supports>
+      </service:Service>
+    </service:describes>
+    <process:hasInput rdf:resource="#GetDrugInformation_TreatmentIInformation"/>
+    <process:hasOutput rdf:resource="#GetDrugInformation_RequiredDrugs"/>
+  </process:AtomicProcess>
+  <!-- <rdf:Description rdf:about="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue">
+    <expr:expressionLanguage rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#SWRL"/>
+    <expr:expressionBody rdf:parseType="Literal"><swrl:AtomList xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"></swrl:AtomList>
+  </expr:expressionBody>
+  </rdf:Description> -->
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

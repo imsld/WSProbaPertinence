@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:EMA="http://127.0.0.1/ontology/EMAOntology.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns="http://127.0.0.1/services/1.1/SelectFlight_service.owls#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/SelectFlight_service.owls">
+  <owl:Ontology rdf:about="">
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/EMAOntology.owl"/>
+  </owl:Ontology>
+  <process:Output rdf:ID="SelectFlight_FlightNumber">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/EMAOntology.owl#FlightNumber</process:parameterType>
+  </process:Output>
+<!-- <rdf:Description rdf:about="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue">
+    <expr:expressionBody rdf:parseType="Literal"><swrl:AtomList xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"></swrl:AtomList>
+  </expr:expressionBody>
+    <expr:expressionLanguage rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#SWRL"/>
+  </rdf:Description> -->
+  <grounding:WsdlAtomicProcessGrounding rdf:ID="SelectFlight_WsdlAtomicProcessGrounding">
+    <grounding:owlsProcess>
+      <process:AtomicProcess rdf:ID="SelectFlight_Model">
+        <process:hasInput>
+          <process:Input rdf:ID="SelectFlight_LiftOfFlights">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/EMAOntology.owl#ListOfFlights</process:parameterType>
+          </process:Input>
+        </process:hasInput>  
+	<process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SelectFlight</process:name>
+        <service:describes>
+          <service:Service rdf:ID="SelectFlight">
+            <service:supports>
+              <grounding:WsdlGrounding rdf:ID="SelectFlight_Grounding">
+                <grounding:hasAtomicProcessGrounding rdf:resource="#SelectFlight_WsdlAtomicProcessGrounding"/>
+                <service:supportedBy rdf:resource="#SelectFlight"/>
+              </grounding:WsdlGrounding>
+            </service:supports>
+            <service:describedBy rdf:resource="#SelectFlight_Model"/>
+            <service:presents>
+              <profile:Profile rdf:ID="SelectFlight_Profile">
+                <profile:hasInput rdf:resource="#SelectFlight_LiftOfFlights"/>
+                <service:presentedBy rdf:resource="#SelectFlight"/>
+                <profile:hasOutput rdf:resource="#SelectFlight_FlightNumber"/>
+                <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Selects out of a list of flights one flight and returns its flight number</profile:textDescription>
+                <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SelectFlight</profile:serviceName>
+              </profile:Profile>
+            </service:presents>
+          </service:Service>
+        </service:describes>
+        <process:hasOutput rdf:resource="#SelectFlight_FlightNumber"/>
+      </process:AtomicProcess>
+    </grounding:owlsProcess>
+  </grounding:WsdlAtomicProcessGrounding>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

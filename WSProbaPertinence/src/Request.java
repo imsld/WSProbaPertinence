@@ -22,15 +22,18 @@ public class Request {
 	private List<Service> listResultEj = new ArrayList<Service>();
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
+	private List<Service> listRelevantSet = new ArrayList<Service>();
 	private String pathResult;
 	private String fileResult;
+	private String fileRelevanceSet;
 	private DocumentBuilderFactory factory;
 	private DocumentBuilder builder;
 	private Document document;
 	private Element racine;
 	private NodeList racineNoeuds;
 
-	public Request(String pathResult, String pathRelevanceSet, int requestID, String requestName) {
+	public Request(String pathResult, String pathRelevanceSet, int requestID,
+			String requestName) {
 		super();
 		this.requestID = requestID;
 		this.requestName = requestName;
@@ -39,8 +42,10 @@ public class Request {
 
 		factory = DocumentBuilderFactory.newInstance();
 		fileResult = pathResult + "\\" + requestName;
-		//fileRelevanceSet = pathRelevanceSet + "\\";//cherché la requette correspondante
-		
+		fileRelevanceSet = pathRelevanceSet + "\\"
+				+ getRequestRelevanteSet(pathRelevanceSet, requestName);
+
+		setlistRelevantSet(fileRelevanceSet);
 		setResultCos(fileResult + "\\resulatscos.xml");
 		setResultLi(fileResult + "\\resulatali.xml");
 		setResultEj(fileResult + "\\resultatej.xml");
@@ -48,10 +53,40 @@ public class Request {
 		setResultLog(fileResult + "\\resulatalog.xml");
 	}
 
+	private void setlistRelevantSet(String fileRelevanceSet) {
+
+		File repertoireRelevantSet = new File(fileRelevanceSet);
+		File[] f = repertoireRelevantSet.listFiles();
+		int totalResult = repertoireRelevantSet.listFiles().length;
+		for (int i = 0; i < totalResult; i++) {
+			if (f[i].isFile()) {
+				Service service = new Service(f[i].getName(), null, 0, 0, 0);
+				listRelevantSet.add(service);
+			}
+		}
+	}
+
+	private String getRequestRelevanteSet(String pathRelevanceSet,
+			String requestName) {
+		String requestNameRelevantSet = null;
+		String name;
+		File repertoireRelevantSet = new File(pathRelevanceSet);
+		File[] f = repertoireRelevantSet.listFiles();
+		int totalResult = repertoireRelevantSet.listFiles().length;
+		for (int i = 0; i < totalResult; i++) {
+			if (f[i].isDirectory()) {
+				name = f[i].getName();
+				name = name.substring(name.indexOf('-') + 1, name.length());
+				if (requestName.equals(name))
+					requestNameRelevantSet = f[i].getName();
+			}
+		}
+		return requestNameRelevantSet;
+	}
+
 	private void setResultCos(String xmlFile) {
 
 		try {
-			System.out.println(xmlFile);
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
 			racine = document.getDocumentElement();
@@ -87,7 +122,6 @@ public class Request {
 
 	public void setResultLi(String xmlFile) {
 		try {
-			System.out.println(xmlFile);
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
 			racine = document.getDocumentElement();
@@ -123,7 +157,6 @@ public class Request {
 
 	public void setResultEj(String xmlFile) {
 		try {
-			System.out.println(xmlFile);
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
 			racine = document.getDocumentElement();
@@ -159,7 +192,6 @@ public class Request {
 
 	public void setResultJs(String xmlFile) {
 		try {
-			System.out.println(xmlFile);
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
 			racine = document.getDocumentElement();
@@ -195,7 +227,6 @@ public class Request {
 
 	public void setResultLog(String xmlFile) {
 		try {
-			System.out.println(xmlFile);
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
 			racine = document.getDocumentElement();
@@ -237,6 +268,10 @@ public class Request {
 		return requestName;
 	}
 
+	public List<Service> getListRelevantSet() {
+		return listRelevantSet;
+	}
+	
 	public List<Service> getResultCos() {
 		return listResultCos;
 	}
