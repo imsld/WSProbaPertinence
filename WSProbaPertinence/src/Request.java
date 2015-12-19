@@ -133,7 +133,7 @@ public class Request {
 
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
-					listResultCos.add(service);
+					listResultLi.add(service);
 				}
 			}
 
@@ -168,7 +168,7 @@ public class Request {
 
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
-					listResultCos.add(service);
+					listResultEj.add(service);
 				}
 			}
 
@@ -203,7 +203,7 @@ public class Request {
 
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
-					listResultCos.add(service);
+					listResultJs.add(service);
 				}
 			}
 
@@ -238,7 +238,7 @@ public class Request {
 
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
-					listResultCos.add(service);
+					listResultLog.add(service);
 				}
 			}
 
