@@ -16,13 +16,19 @@ import org.xml.sax.SAXException;
 public class Request {
 	private int requestID;
 	private String requestName;
-	private String pathRelevanceSet;
+	private List<String> listRelevantSet = new ArrayList<String>();
+	
 	private List<Service> listResultCos = new ArrayList<Service>();
 	private List<Service> listResultLi = new ArrayList<Service>();
 	private List<Service> listResultEj = new ArrayList<Service>();
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
-	private List<Service> listRelevantSet = new ArrayList<Service>();
+	private List<Integer> nbservicePerResultCos= new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultLi= new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultEj= new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultJs= new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultLog= new ArrayList<Integer>();
+	
 	private String pathResult;
 	private String fileResult;
 	private String fileRelevanceSet;
@@ -38,7 +44,6 @@ public class Request {
 		this.requestID = requestID;
 		this.requestName = requestName;
 		this.pathResult = pathResult;
-		this.pathRelevanceSet = pathRelevanceSet;
 
 		factory = DocumentBuilderFactory.newInstance();
 		fileResult = pathResult + "\\" + requestName;
@@ -46,7 +51,8 @@ public class Request {
 				+ getRequestRelevanteSet(pathRelevanceSet, requestName);
 
 		setlistRelevantSet(fileRelevanceSet);
-		setResultCos(fileResult + "\\resulatscos.xml");
+
+		setResultCos(fileResult + "\\resulatscos.xml");		
 		setResultLi(fileResult + "\\resulatali.xml");
 		setResultEj(fileResult + "\\resultatej.xml");
 		setResultJs(fileResult + "\\resultatjs.xml");
@@ -60,30 +66,12 @@ public class Request {
 		int totalResult = repertoireRelevantSet.listFiles().length;
 		for (int i = 0; i < totalResult; i++) {
 			if (f[i].isFile()) {
-				Service service = new Service(f[i].getName(), null, 0, 0, 0);
-				listRelevantSet.add(service);
+				listRelevantSet.add(f[i].getName());
 			}
 		}
 	}
 
-	private String getRequestRelevanteSet(String pathRelevanceSet,
-			String requestName) {
-		String requestNameRelevantSet = null;
-		String name;
-		File repertoireRelevantSet = new File(pathRelevanceSet);
-		File[] f = repertoireRelevantSet.listFiles();
-		int totalResult = repertoireRelevantSet.listFiles().length;
-		for (int i = 0; i < totalResult; i++) {
-			if (f[i].isDirectory()) {
-				name = f[i].getName();
-				name = name.substring(name.indexOf('-') + 1, name.length());
-				if (requestName.equals(name))
-					requestNameRelevantSet = f[i].getName();
-			}
-		}
-		return requestNameRelevantSet;
-	}
-
+	
 	private void setResultCos(String xmlFile) {
 
 		try {
@@ -260,6 +248,24 @@ public class Request {
 
 	}
 
+	private String getRequestRelevanteSet(String pathRelevanceSet,
+			String requestName) {
+		String requestNameRelevantSet = null;
+		String name;
+		File repertoireRelevantSet = new File(pathRelevanceSet);
+		File[] f = repertoireRelevantSet.listFiles();
+		int totalResult = repertoireRelevantSet.listFiles().length;
+		for (int i = 0; i < totalResult; i++) {
+			if (f[i].isDirectory()) {
+				name = f[i].getName();
+				name = name.substring(name.indexOf('-') + 1, name.length());
+				if (requestName.equals(name))
+					requestNameRelevantSet = f[i].getName();
+			}
+		}
+		return requestNameRelevantSet;
+	}
+
 	public int getRequestID() {
 		return requestID;
 	}
@@ -268,7 +274,7 @@ public class Request {
 		return requestName;
 	}
 
-	public List<Service> getListRelevantSet() {
+	public List<String> getListRelevantSet() {
 		return listRelevantSet;
 	}
 	
@@ -291,4 +297,46 @@ public class Request {
 	public List<Service> getResultLog() {
 		return listResultLog;
 	}
+
+	public List<Integer> getNbservicePerResultCos() {
+		return nbservicePerResultCos;
+	}
+
+	public List<Integer> getNbservicePerResultLi() {
+		return nbservicePerResultLi;
+	}
+
+	public List<Integer> getNbservicePerResultEj() {
+		return nbservicePerResultEj;
+	}
+
+	public List<Integer> getNbservicePerResultJs() {
+		return nbservicePerResultJs;
+	}
+
+	public List<Integer> getNbservicePerResultLog() {
+		return nbservicePerResultLog;
+	}
+
+	public void setNbservicePerResultCos(List<Integer> nbservicePerResultCos) {
+		this.nbservicePerResultCos = nbservicePerResultCos;
+	}
+
+	public void setNbservicePerResultLi(List<Integer> nbservicePerResultLi) {
+		this.nbservicePerResultLi = nbservicePerResultLi;
+	}
+
+	public void setNbservicePerResultEj(List<Integer> nbservicePerResultEj) {
+		this.nbservicePerResultEj = nbservicePerResultEj;
+	}
+
+	public void setNbservicePerResultJs(List<Integer> nbservicePerResultJs) {
+		this.nbservicePerResultJs = nbservicePerResultJs;
+	}
+
+	public void setNbservicePerResultLog(List<Integer> nbservicePerResultLog) {
+		this.nbservicePerResultLog = nbservicePerResultLog;
+	}
+	
+	
 }

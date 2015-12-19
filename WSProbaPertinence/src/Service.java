@@ -4,6 +4,7 @@ public class Service {
 	private double scoreInput;
 	private double scoreOutput;
 	private double moyenne;
+	private int positionK = -1;
 
 	public Service(String iDService, String iDRequete, double scoreInput,
 			double scoreOutput, double moyenne) {
@@ -35,4 +36,11 @@ public class Service {
 		return moyenne;
 	}
 
+	public int getPositionK() {
+		return positionK;
+	}
+
+	public void setPositionK(int positionK) {
+		this.positionK = positionK;
+	}
 }
