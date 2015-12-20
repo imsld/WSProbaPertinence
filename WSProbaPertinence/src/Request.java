@@ -6,6 +6,11 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,18 +22,18 @@ public class Request {
 	private int requestID;
 	private String requestName;
 	private List<String> listRelevantSet = new ArrayList<String>();
-	
+
 	private List<Service> listResultCos = new ArrayList<Service>();
 	private List<Service> listResultLi = new ArrayList<Service>();
 	private List<Service> listResultEj = new ArrayList<Service>();
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
-	private List<Integer> nbservicePerResultCos= new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultLi= new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultEj= new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultJs= new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultLog= new ArrayList<Integer>();
-	
+	private List<Integer> nbservicePerResultCos = new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultLi = new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultEj = new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultJs = new ArrayList<Integer>();
+	private List<Integer> nbservicePerResultLog = new ArrayList<Integer>();
+
 	private String pathResult;
 	private String fileResult;
 	private String fileRelevanceSet;
@@ -52,7 +57,7 @@ public class Request {
 
 		setlistRelevantSet(fileRelevanceSet);
 
-		setResultCos(fileResult + "\\resulatscos.xml");		
+		setResultCos(fileResult + "\\resulatscos.xml");
 		setResultLi(fileResult + "\\resulatali.xml");
 		setResultEj(fileResult + "\\resultatej.xml");
 		setResultJs(fileResult + "\\resultatjs.xml");
@@ -71,7 +76,6 @@ public class Request {
 		}
 	}
 
-	
 	private void setResultCos(String xmlFile) {
 
 		try {
@@ -99,14 +103,22 @@ public class Request {
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
 					listResultCos.add(service);
-				}
+
+					serviceNode
+							.setAttribute("ID_Sequ", Integer.toString(i + 1));
+
+				}				
 			}
+			document.getDocumentElement().normalize();
+			writeInFile(document, xmlFile);
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
 
 	}
+
+	
 
 	public void setResultLi(String xmlFile) {
 		try {
@@ -134,9 +146,11 @@ public class Request {
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
 					listResultLi.add(service);
+					
 				}
 			}
-
+			document.getDocumentElement().normalize();
+			writeInFile(document, xmlFile);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -171,7 +185,8 @@ public class Request {
 					listResultEj.add(service);
 				}
 			}
-
+			document.getDocumentElement().normalize();
+			writeInFile(document, xmlFile);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -206,6 +221,8 @@ public class Request {
 					listResultJs.add(service);
 				}
 			}
+			document.getDocumentElement().normalize();
+			writeInFile(document, xmlFile);
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
@@ -241,7 +258,8 @@ public class Request {
 					listResultLog.add(service);
 				}
 			}
-
+			document.getDocumentElement().normalize();
+			writeInFile(document, xmlFile);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -277,7 +295,7 @@ public class Request {
 	public List<String> getListRelevantSet() {
 		return listRelevantSet;
 	}
-	
+
 	public List<Service> getResultCos() {
 		return listResultCos;
 	}
@@ -337,6 +355,35 @@ public class Request {
 	public void setNbservicePerResultLog(List<Integer> nbservicePerResultLog) {
 		this.nbservicePerResultLog = nbservicePerResultLog;
 	}
-	
-	
+
+	private void writeInFile(Document document, String filePath) {
+
+		File xmlFile = null;
+
+		TransformerFactory transformerFactory = TransformerFactory
+				.newInstance();
+		Transformer transformer;
+
+		try {
+			transformer = transformerFactory.newTransformer();
+			// for pretty print
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			DOMSource source = new DOMSource(document);
+
+			// write to console or file
+			// StreamResult console = new StreamResult(System.out);
+			StreamResult file = new StreamResult(new File(filePath));
+
+			// write data
+			// transformer.transform(source, console);
+			transformer.transform(source, file);
+
+			xmlFile = new File(filePath);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }

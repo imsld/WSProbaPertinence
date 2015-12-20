@@ -6,7 +6,7 @@ public class Principale {
 	static private String cheminResultat = "\\Fichiers\\resultats";
 	static private String cheminRelevanceSet = "\\Fichiers\\relevance_sets";
 	static private String cheminService = "\\Fichiers\\services";
-	static private int K = 15;
+	static private int K = 10;
 
 	public static void main(String[] args) {
 		// / TODO Auto-generated method stub
