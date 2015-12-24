@@ -28,11 +28,13 @@ public class Request {
 	private List<Service> listResultEj = new ArrayList<Service>();
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
-	private List<Integer> nbservicePerResultCos = new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultLi = new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultEj = new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultJs = new ArrayList<Integer>();
-	private List<Integer> nbservicePerResultLog = new ArrayList<Integer>();
+	private List<Double> pourcentageServicePerResultCos = new ArrayList<Double>();
+	private List<Double> pourcentageServicePerResultLi = new ArrayList<Double>();
+	private List<Double> pourcentageServicePerResultEj = new ArrayList<Double>();
+	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
+	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
+
+	private double probabilite = 0;
 
 	private String pathResult;
 	private String fileResult;
@@ -43,12 +45,17 @@ public class Request {
 	private Element racine;
 	private NodeList racineNoeuds;
 
+	private int K;
+
 	public Request(String pathResult, String pathRelevanceSet, int requestID,
-			String requestName) {
+			String requestName, int k) {
 		super();
 		this.requestID = requestID;
 		this.requestName = requestName;
 		this.pathResult = pathResult;
+		this.probabilite = probabilite;
+
+		this.K = k;
 
 		factory = DocumentBuilderFactory.newInstance();
 		fileResult = pathResult + "\\" + requestName;
@@ -62,6 +69,37 @@ public class Request {
 		setResultEj(fileResult + "\\resultatej.xml");
 		setResultJs(fileResult + "\\resultatjs.xml");
 		setResultLog(fileResult + "\\resulatalog.xml");
+
+		// System.out.println("*******************************");
+		// System.out.println("ID de la requete :" + getRequestID());
+		// System.out.println("nom de la requete :" + getRequestName());
+
+		// System.out.println("nombre de services pertinants:"
+		// + getListRelevantSet().size());
+
+		// System.out.println("---------------- Cosinus : ---------------");
+		pourcentageServicePerResultCos = calculMethodeCluster(listResultCos,
+				(14 / k));
+		// System.out.println("---------------- EJ : ---------------");
+		pourcentageServicePerResultEj = calculMethodeCluster(listResultEj,
+				(14 / k));
+		// System.out.println("---------------- JS : ---------------");
+		pourcentageServicePerResultJs = calculMethodeCluster(listResultJs,
+				(14 / k));
+		// System.out.println("---------------- LI : ---------------");
+		pourcentageServicePerResultLi = calculMethodeCluster(listResultLi,
+				(14 / k));
+		// System.out.println("---------------- Log : ---------------");
+		pourcentageServicePerResultLog = calculMethodeCluster(listResultLog,
+				(14 / k));
+	}
+
+	public double getProbabilite() {
+		return probabilite;
+	}
+
+	public void setProbabilite(double probabilite) {
+		this.probabilite = probabilite;
 	}
 
 	private void setlistRelevantSet(String fileRelevanceSet) {
@@ -107,18 +145,18 @@ public class Request {
 					serviceNode
 							.setAttribute("ID_Sequ", Integer.toString(i + 1));
 
-				}				
+				}
 			}
-			document.getDocumentElement().normalize();
-			writeInFile(document, xmlFile);
+			/*
+			 * document.getDocumentElement().normalize(); writeInFile(document,
+			 * xmlFile);
+			 */
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
 
 	}
-
-	
 
 	public void setResultLi(String xmlFile) {
 		try {
@@ -146,11 +184,13 @@ public class Request {
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
 					listResultLi.add(service);
-					
+
 				}
 			}
-			document.getDocumentElement().normalize();
-			writeInFile(document, xmlFile);
+			/*
+			 * document.getDocumentElement().normalize(); writeInFile(document,
+			 * xmlFile);
+			 */
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -185,8 +225,10 @@ public class Request {
 					listResultEj.add(service);
 				}
 			}
-			document.getDocumentElement().normalize();
-			writeInFile(document, xmlFile);
+			/*
+			 * document.getDocumentElement().normalize(); writeInFile(document,
+			 * xmlFile);
+			 */
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -221,8 +263,10 @@ public class Request {
 					listResultJs.add(service);
 				}
 			}
-			document.getDocumentElement().normalize();
-			writeInFile(document, xmlFile);
+			/*
+			 * document.getDocumentElement().normalize(); writeInFile(document,
+			 * xmlFile);
+			 */
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
@@ -258,8 +302,10 @@ public class Request {
 					listResultLog.add(service);
 				}
 			}
-			document.getDocumentElement().normalize();
-			writeInFile(document, xmlFile);
+			/*
+			 * document.getDocumentElement().normalize(); writeInFile(document,
+			 * xmlFile);
+			 */
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -316,74 +362,129 @@ public class Request {
 		return listResultLog;
 	}
 
-	public List<Integer> getNbservicePerResultCos() {
-		return nbservicePerResultCos;
+	public List<Double> getPourcentageServicePerResultCos() {
+		return pourcentageServicePerResultCos;
 	}
 
-	public List<Integer> getNbservicePerResultLi() {
-		return nbservicePerResultLi;
+	public List<Double> getPourcentageServicePerResultLi() {
+		return pourcentageServicePerResultLi;
 	}
 
-	public List<Integer> getNbservicePerResultEj() {
-		return nbservicePerResultEj;
+	public List<Double> getPourcentageServicePerResultEj() {
+		return pourcentageServicePerResultEj;
 	}
 
-	public List<Integer> getNbservicePerResultJs() {
-		return nbservicePerResultJs;
+	public List<Double> getPourcentageServicePerResultJs() {
+		return pourcentageServicePerResultJs;
 	}
 
-	public List<Integer> getNbservicePerResultLog() {
-		return nbservicePerResultLog;
+	public List<Double> getPourcentageServicePerResultLog() {
+		return pourcentageServicePerResultLog;
 	}
 
-	public void setNbservicePerResultCos(List<Integer> nbservicePerResultCos) {
-		this.nbservicePerResultCos = nbservicePerResultCos;
+	public void setPourcentageServicePerResultCos(
+			List<Double> pourcentageServicePerResultCos) {
+		this.pourcentageServicePerResultCos = pourcentageServicePerResultCos;
 	}
 
-	public void setNbservicePerResultLi(List<Integer> nbservicePerResultLi) {
-		this.nbservicePerResultLi = nbservicePerResultLi;
+	public void setPourcentageServicePerResultLi(
+			List<Double> pourcentageServicePerResultLi) {
+		this.pourcentageServicePerResultLi = pourcentageServicePerResultLi;
 	}
 
-	public void setNbservicePerResultEj(List<Integer> nbservicePerResultEj) {
-		this.nbservicePerResultEj = nbservicePerResultEj;
+	public void setPourcentageServicePerResultEj(
+			List<Double> pourcentageServicePerResultEj) {
+		this.pourcentageServicePerResultEj = pourcentageServicePerResultEj;
 	}
 
-	public void setNbservicePerResultJs(List<Integer> nbservicePerResultJs) {
-		this.nbservicePerResultJs = nbservicePerResultJs;
+	public void setPourcentageServicePerResultJs(
+			List<Double> pourcentageServicePerResultJs) {
+		this.pourcentageServicePerResultJs = pourcentageServicePerResultJs;
 	}
 
-	public void setNbservicePerResultLog(List<Integer> nbservicePerResultLog) {
-		this.nbservicePerResultLog = nbservicePerResultLog;
+	public void setPourcentageServicePerResultLog(
+			List<Double> pourcentageServicePerResultLog) {
+		this.pourcentageServicePerResultLog = pourcentageServicePerResultLog;
 	}
 
-	private void writeInFile(Document document, String filePath) {
+	/*
+	 * private void writeInFile(Document document, String filePath) {
+	 * 
+	 * File xmlFile = null;
+	 * 
+	 * TransformerFactory transformerFactory = TransformerFactory
+	 * .newInstance(); Transformer transformer;
+	 * 
+	 * try { transformer = transformerFactory.newTransformer(); // for pretty
+	 * print transformer.setOutputProperty(OutputKeys.INDENT, "yes"); DOMSource
+	 * source = new DOMSource(document);
+	 * 
+	 * // write to console or file // StreamResult console = new
+	 * StreamResult(System.out); StreamResult file = new StreamResult(new
+	 * File(filePath));
+	 * 
+	 * // write data // transformer.transform(source, console);
+	 * transformer.transform(source, file);
+	 * 
+	 * xmlFile = new File(filePath);
+	 * 
+	 * } catch (Exception e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); }
+	 * 
+	 * }
+	 */
+	private List<Double> calculMethodeCluster(List<Service> listSerParMethode,
+			int interval) {
+		int nbtotal = 0;
+		if (14 % K == 0)
+			interval = (14/K);
+		else
+			interval = (14/K)+1;
+		List<Double> PSerPertinant = new ArrayList<Double>();
+		int borneSup = 0;
+		for (int pos = 0; pos < K; pos++) {
 
-		File xmlFile = null;
+			int borneInf = interval * pos;
+			
+			
+			if (pos == K - 1)
+				borneSup = borneInf +(14 % K)+1;
+			else
+			borneSup = (interval * (pos + 1))-1;
 
-		TransformerFactory transformerFactory = TransformerFactory
-				.newInstance();
-		Transformer transformer;
+			int totalServicePertinantInInterval = 0;
 
-		try {
-			transformer = transformerFactory.newTransformer();
-			// for pretty print
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			DOMSource source = new DOMSource(document);
+			if (nbtotal != listRelevantSet.size())
+				for (int j = borneInf; j <= borneSup; j++) {
+					String IDService = listSerParMethode.get(j).getIDService();
+					listSerParMethode.get(j).setPositionK(pos);
+					IDService = IDService.substring(IDService.indexOf('*') + 1,
+							IDService.length());
+					if (listRelevantSet.contains(IDService)) {
+						totalServicePertinantInInterval = totalServicePertinantInInterval + 1;
+						listSerParMethode.get(j).setPertinant(true);
+					}
+				}
+			for (int j = borneInf; j < borneSup; j++) {
+				listSerParMethode.get(j).setPositionK(pos + 1);
+			}
+			nbtotal = nbtotal + totalServicePertinantInInterval;
+			// if (totalServicePertinantInInterval != 0)
+			/*
+			 * System.out.println("Nombre de service pertinant dans la " + pos +
+			 * " position est : " + totalServicePertinantInInterval + "\t  " +
+			 * "(" + borneInf + "-->" + (borneSup - 1) + ")");
+			 */
+			double taille = (borneSup - borneInf) + 1;
+			System.out.println(taille);
+			double p = ((totalServicePertinantInInterval) / (taille));
+			System.out.println(totalServicePertinantInInterval);
+			PSerPertinant.add(p);
 
-			// write to console or file
-			// StreamResult console = new StreamResult(System.out);
-			StreamResult file = new StreamResult(new File(filePath));
-
-			// write data
-			// transformer.transform(source, console);
-			transformer.transform(source, file);
-
-			xmlFile = new File(filePath);
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// if (totalServicePertinantInInterval == listSerRS.size())
 		}
-
+		System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+		return PSerPertinant;
 	}
+	
 }

@@ -17,6 +17,8 @@ public class ReadResults_And_RelevanceSet {
 		super();
 		this.pathResult = pathResult;
 		this.pathRelevanceSet = pathRelevanceSet;
+
+		this.k = k;
 		setTotalResult();
 		setListRequests();
 	}
@@ -33,7 +35,7 @@ public class ReadResults_And_RelevanceSet {
 			if (f[i].isDirectory()) {
 				requestName = f[i].getName();
 				Request req = new Request(pathResult, pathRelevanceSet, i,
-						requestName);
+						requestName, k);
 				listRequests.add(req);
 			}
 		}
