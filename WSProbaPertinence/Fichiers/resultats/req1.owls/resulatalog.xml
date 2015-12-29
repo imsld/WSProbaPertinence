@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<base_serv>
+<service Logique="0.14" ID="S13.owls" ID_Sequ="2" Input="1.0" Output="0.9999999999999998"/>
+<service Logique="0.13" ID="S2.owls" ID_Sequ="4" Input="1.0" Output="0.9999999999999998"/>
+<service Logique="0.12" ID="S9.owls" ID_Sequ="6" Input="1.0" Output="0.9999999999999998"/>
+<service Logique="0.11" ID="S12.owls" ID_Sequ="8" Input="0.9848560041821378" Output="0.9999999999999998"/>
+<service Logique="0.10" ID="S8.owls" ID_Sequ="10" Input="0.9848560041821378" Output="0.9999999999999998"/>
+<service Logique="0.9" ID="S10.owls" ID_Sequ="12" Input="0.9848560041821378" Output="0.9999999999999998"/>
+<service Logique="0.8" ID="S5.owls" ID_Sequ="14" Input="0.9838800852984783" Output="0.9999999999999998"/>
+<service Logique="0.7" ID="S1.owls" ID_Sequ="16" Input="0.9838800852984783" Output="0.9999999999999998"/>
+<service Logique="0.6" ID="S7.owls" ID_Sequ="18" Input="0.9838800852984783" Output="0.9999999999999998"/>
+<service Logique="0.5" ID="S4.owls" ID_Sequ="20" Input="0.9838709677419355" Output="0.9999999999999998"/>
+<service Logique="0.4" ID="S11.owls" ID_Sequ="22" Input="0.9692233691951198" Output="0.9999999999999998"/>
+<service Logique="0.3" ID="S14.owls" ID_Sequ="24" Input="0.9692233691951198" Output="0.9999999999999998"/>
+<service Logique="0.2" ID="S6.owls" ID_Sequ="26" Input="0.9692233691951198" Output="0.9999999999999998"/>
+<service Logique="0.1" ID="S3.owls" ID_Sequ="28" Input="0.9678215817483969" Output="0.9999999999999998"/>
+</base_serv>

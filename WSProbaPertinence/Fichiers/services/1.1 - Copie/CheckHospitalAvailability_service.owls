@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns="http://127.0.0.1/services/1.1/CheckHospitalAvailability_service.owls#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:HospRcp="http://127.0.0.1/ontology/HospitalReceptionOntology.owl#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/CheckHospitalAvailability_service.owls">
+  <owl:Ontology rdf:about="">
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/HospitalReceptionOntology.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+  </owl:Ontology>
+  <process:InputBinding rdf:ID="InputBinding_45">
+    <process:toParam>
+      <process:Input rdf:ID="CheckPersonnelAvailability_TreatmentRecomendation">
+        <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#Treatment</process:parameterType>
+      </process:Input>
+    </process:toParam>
+    <process:valueSource>
+      <process:ValueOf rdf:ID="ValueOf_46">
+        <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+        <process:theVar>
+          <process:Input rdf:ID="CheckHospitalAvailability_TreatmentRecomendation">
+            <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#Treatment</process:parameterType>
+          </process:Input>
+        </process:theVar>
+      </process:ValueOf>
+    </process:valueSource>
+  </process:InputBinding>
+  <process:ControlConstructBag rdf:ID="ControlConstructBag_28">
+    <list:first>
+      <process:Perform rdf:ID="CheckEquipmentAvailability_Perform">
+        <process:process rdf:resource="#CheckEquipmentAvailability_Model"/>
+        <process:hasDataFrom rdf:resource="#InputBinding_30"/>
+        <process:hasDataFrom>
+          <process:InputBinding rdf:ID="InputBinding_35">
+            <process:valueSource>
+              <process:ValueOf rdf:ID="ValueOf_36">
+                <process:theVar>
+                  <process:Input rdf:ID="CheckHospitalAvailability_TreatmentDate">
+                    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#DateTime</process:parameterType>
+                  </process:Input>
+                </process:theVar>
+                <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+              </process:ValueOf>
+            </process:valueSource>
+            <process:toParam rdf:resource="#CheckEquipmentAvailability_TreatmentDate"/>
+          </process:InputBinding>
+        </process:hasDataFrom>
+      </process:Perform>
+    </list:first>
+    <list:rest>
+      <process:ControlConstructBag rdf:ID="ControlConstructBag_38">
+        <list:rest>
+          <process:ControlConstructBag rdf:ID="ControlConstructBag_44">
+            <list:first>
+              <process:Perform rdf:ID="CheckPersonnelAvailability_Perform">
+                <process:process rdf:resource="#CheckPersonnelAvailability_Model"/>
+                <process:hasDataFrom rdf:resource="#InputBinding_45"/>
+                <process:hasDataFrom>
+                  <process:InputBinding rdf:ID="InputBinding_47">
+                    <process:toParam rdf:resource="#CheckPersonnelAvailability_TreatmentDate"/>
+                    <process:valueSource>
+                      <process:ValueOf rdf:ID="ValueOf_48">
+                        <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+                        <process:theVar rdf:resource="#CheckHospitalAvailability_TreatmentDate"/>
+                      </process:ValueOf>
+                    </process:valueSource>
+                  </process:InputBinding>
+                </process:hasDataFrom>
+              </process:Perform>
+            </list:first>
+            <list:rest rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#nil"/>
+          </process:ControlConstructBag>
+        </list:rest>
+        <list:first>
+          <process:Perform rdf:ID="CheckRoomAvailability_Perform">
+            <process:hasDataFrom>
+              <process:InputBinding rdf:ID="InputBinding_39">
+                <process:valueSource>
+                  <process:ValueOf rdf:ID="ValueOf_40">
+                    <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+                    <process:theVar rdf:resource="#CheckHospitalAvailability_TreatmentRecomendation"/>
+                  </process:ValueOf>
+                </process:valueSource>
+                <process:toParam rdf:resource="#CheckRoomAvailability_TreatmentRecomendation"/>
+              </process:InputBinding>
+            </process:hasDataFrom>
+            <process:process rdf:resource="#CheckRoomAvailability_Model"/>
+            <process:hasDataFrom>
+              <process:InputBinding rdf:ID="InputBinding_41">
+                <process:valueSource>
+                  <process:ValueOf rdf:ID="ValueOf_42">
+                    <process:theVar rdf:resource="#CheckHospitalAvailability_TreatmentDate"/>
+                    <process:fromProcess rdf:resource="http://127.0.0.1/ontology/Process.owl#TheParentPerform"/>
+                  </process:ValueOf>
+                </process:valueSource>
+                <process:toParam rdf:resource="#CheckRoomAvailability_TreatmentDate"/>
+              </process:InputBinding>
+            </process:hasDataFrom>
+          </process:Perform>
+        </list:first>
+      </process:ControlConstructBag>
+    </list:rest>
+  </process:ControlConstructBag>
+  <process:Output rdf:ID="CheckHospitalAvailability_AvailabilityResponse">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HospitalReceptionOntology.owl#AvailabilityResponse</process:parameterType>
+  </process:Output>
+  <process:InputBinding rdf:ID="InputBinding_29"/>
+  <process:Split-Join rdf:ID="CheckHospitalAvailability_Split-Join">
+    <process:components rdf:resource="#ControlConstructBag_28"/>
+  </process:Split-Join>
+  <!-- <rdf:Description rdf:about="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue">
+    <expr:expressionBody rdf:parseType="Literal"><swrl:AtomList xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"></swrl:AtomList>
+  </expr:expressionBody>
+    <expr:expressionLanguage rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#SWRL"/>
+  </rdf:Description> -->
+  <HospRcp:AvailabilityResponse rdf:ID="AvailabilityResponse_49"/>
+  <process:CompositeProcess rdf:ID="CheckHospitalAvailability_Model">
+    <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CheckHospitalAvailability</process:name>
+    <process:hasOutput rdf:resource="#CheckHospitalAvailability_AvailabilityResponse"/>
+    <service:describes>
+      <service:Service rdf:ID="CheckHospitalAvailability">
+        <service:supports>
+          <grounding:WsdlGrounding rdf:ID="CheckHospitalAvailability_Grounding">
+            <service:supportedBy rdf:resource="#CheckHospitalAvailability"/>
+            <grounding:hasAtomicProcessGrounding rdf:resource="#CheckPersonnelAvailability_WsdlAtomicProcessGrounding"/>
+            <grounding:hasAtomicProcessGrounding rdf:resource="#CheckEquipmentAvailability_WsdlAtomicProcessGrounding"/>
+            <grounding:hasAtomicProcessGrounding rdf:resource="#CheckRoomAvailability_WsdlAtomicProcessGrounding"/>
+          </grounding:WsdlGrounding>
+        </service:supports>
+        <service:describedBy rdf:resource="#CheckHospitalAvailability_Model"/>
+        <service:presents>
+          <profile:Profile rdf:ID="CheckHospitalAvailability_Profile">
+            <profile:hasOutput rdf:resource="#CheckHospitalAvailability_AvailabilityResponse"/>
+            <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The service checks, whether the hospital has capabilities to treat a patient on the given date with the desired treatment.</profile:textDescription>
+            <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CheckHospitalAvailability</profile:serviceName>
+            <service:presentedBy rdf:resource="#CheckHospitalAvailability"/>
+            <profile:hasInput rdf:resource="#CheckHospitalAvailability_TreatmentRecomendation"/>
+            <profile:hasInput rdf:resource="#CheckHospitalAvailability_TreatmentDate"/>
+          </profile:Profile>
+        </service:presents>
+      </service:Service>
+    </service:describes>
+    <process:composedOf rdf:resource="#CheckHospitalAvailability_Split-Join"/>
+    <process:hasInput rdf:resource="#CheckHospitalAvailability_TreatmentDate"/>
+    <process:hasInput rdf:resource="#CheckHospitalAvailability_TreatmentRecomendation"/>
+  </process:CompositeProcess>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

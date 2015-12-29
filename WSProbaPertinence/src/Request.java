@@ -33,6 +33,8 @@ public class Request {
 	private List<Double> pourcentageServicePerResultEj = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
+	
+	List<Service> listServiceSD = new ArrayList<Service>();
 
 	private double probabilite = 0;
 
@@ -46,7 +48,21 @@ public class Request {
 	private NodeList racineNoeuds;
 
 	private int K;
-
+	
+	public void trierListMapp(){
+		for (int i = 0; i < listServiceSD.size()-1; i++) {
+			double score1 = listServiceSD.get(i).Score_SD;
+			for (int j = i+1; j < listServiceSD.size(); j++) {
+				double score2 = listServiceSD.get(j).Score_SD;
+				if (score2 > score1){
+					listServiceSD.add(i,listServiceSD.remove(j));
+					score1 = score2;
+				}
+			}
+			
+		}
+	}
+	
 	public Request(String pathResult, String pathRelevanceSet, int requestID,
 			String requestName, int k) {
 		super();
@@ -444,9 +460,7 @@ public class Request {
 		int borneSup = 0;
 		for (int pos = 0; pos < K; pos++) {
 
-			int borneInf = interval * pos;
-			
-			
+			int borneInf = interval * pos;			
 			if (pos == K - 1)
 				borneSup = borneInf +(14 % K)+1;
 			else
@@ -465,25 +479,15 @@ public class Request {
 						listSerParMethode.get(j).setPertinant(true);
 					}
 				}
-			for (int j = borneInf; j < borneSup; j++) {
+			for (int j = borneInf; j <= borneSup; j++) {
 				listSerParMethode.get(j).setPositionK(pos + 1);
 			}
 			nbtotal = nbtotal + totalServicePertinantInInterval;
-			// if (totalServicePertinantInInterval != 0)
-			/*
-			 * System.out.println("Nombre de service pertinant dans la " + pos +
-			 * " position est : " + totalServicePertinantInInterval + "\t  " +
-			 * "(" + borneInf + "-->" + (borneSup - 1) + ")");
-			 */
 			double taille = (borneSup - borneInf) + 1;
-			System.out.println(taille);
 			double p = ((totalServicePertinantInInterval) / (taille));
-			System.out.println(totalServicePertinantInInterval);
 			PSerPertinant.add(p);
 
-			// if (totalServicePertinantInInterval == listSerRS.size())
 		}
-		System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 		return PSerPertinant;
 	}
 	

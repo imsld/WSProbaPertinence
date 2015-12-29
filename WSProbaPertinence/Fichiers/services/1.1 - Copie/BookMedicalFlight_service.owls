@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:MedFlightComp="http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#"
+    xmlns="http://127.0.0.1/services/1.1/BookMedicalFlight_service.owls#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/BookMedicalFlight_service.owls.owls">
+  <owl:Ontology rdf:about="">
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+  </owl:Ontology>
+  <!-- <rdf:Description rdf:about="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue">
+    <expr:expressionLanguage rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#SWRL"/>
+    <expr:expressionBody rdf:parseType="Literal"><swrl:AtomList xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"></swrl:AtomList>
+  </expr:expressionBody>
+  </rdf:Description> -->
+  <process:Input rdf:ID="BookMedicalFlight_FlightNumber">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#FlightNumber</process:parameterType>
+  </process:Input>
+  <process:Input rdf:ID="BookMedicalFlight_Account">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#Account</process:parameterType>
+  </process:Input>
+  <grounding:WsdlGrounding rdf:ID="BookMedicalFlight_Grounding">
+    <service:supportedBy>
+      <service:Service rdf:ID="BookMedicalFlight">
+        <service:describedBy>
+          <process:AtomicProcess rdf:ID="BookMedicalFlight_Model">
+            <process:hasOutput>
+              <process:Output rdf:ID="BookMedicalFlight_AirportGate">
+                <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#AirportGate</process:parameterType>
+              </process:Output>
+            </process:hasOutput>
+            <process:hasOutput>
+              <process:Output rdf:ID="BookMedicalFlight_BookingNumber">
+                <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#BookingNumber</process:parameterType>
+              </process:Output>
+            </process:hasOutput>
+            <service:describes rdf:resource="#BookMedicalFlight"/>
+            <process:hasInput rdf:resource="#BookMedicalFlight_Account"/>
+            <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BookMedicalFlight</process:name>
+            <process:hasInput rdf:resource="#BookMedicalFlight_FlightNumber"/>
+            <process:hasOutput>
+              <process:Output rdf:ID="BookMedicalFlight_SeatNumber">
+                <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/MedicalFlightCompanyOntology.owl#SeatNumber</process:parameterType>
+              </process:Output>
+            </process:hasOutput>
+          </process:AtomicProcess>
+        </service:describedBy>
+        <service:presents>
+          <profile:Profile rdf:ID="BookMedicalFlight_Profile">
+            <profile:hasInput rdf:resource="#BookMedicalFlight_Account"/>
+            <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BookMedicalFlight</profile:serviceName>
+            <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Book a flight. The customer using this service must have an account for this flight company!</profile:textDescription>
+            <profile:hasOutput rdf:resource="#BookMedicalFlight_BookingNumber"/>
+            <profile:hasInput rdf:resource="#BookMedicalFlight_FlightNumber"/>
+            <service:presentedBy rdf:resource="#BookMedicalFlight"/>
+            <profile:hasOutput rdf:resource="#BookMedicalFlight_AirportGate"/>
+            <profile:hasOutput rdf:resource="#BookMedicalFlight_SeatNumber"/>
+          </profile:Profile>
+        </service:presents>
+        <service:supports rdf:resource="#BookMedicalFlight_Grounding"/>
+      </service:Service>
+    </service:supportedBy>
+    <grounding:hasAtomicProcessGrounding>
+      <grounding:WsdlAtomicProcessGrounding rdf:ID="BookMedicalFlight_WsdlAtomicProcessGrounding">
+        <grounding:owlsProcess rdf:resource="#BookMedicalFlight_Model"/>
+      </grounding:WsdlAtomicProcessGrounding>
+    </grounding:hasAtomicProcessGrounding>
+  </grounding:WsdlGrounding>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->
