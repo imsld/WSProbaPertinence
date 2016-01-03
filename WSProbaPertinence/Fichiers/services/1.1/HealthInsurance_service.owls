@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns="http://127.0.0.1/services/1.1/HealthInsuranceServices.owls#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:HI="http://127.0.0.1/ontology/HealthInsuranceOntology.owl#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/HealthInsuranceServices.owls">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/HealthInsuranceOntology.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+  </owl:Ontology>
+  <service:Service rdf:ID="SendEMAPhoneNumber">
+    <service:supports>
+      <grounding:WsdlGrounding rdf:ID="SendEMAPhoneNumber_Grounding">
+        <service:supportedBy rdf:resource="#SendEMAPhoneNumber"/>
+        <grounding:hasAtomicProcessGrounding>
+          <grounding:WsdlAtomicProcessGrounding rdf:ID="SendEMAPhoneNumber_WsdlAtomicProcessGrounding">
+            <grounding:owlsProcess>
+              <process:AtomicProcess rdf:ID="SendEMAPhoneNumber_Model">
+                <service:describes rdf:resource="#SendEMAPhoneNumber"/>
+                <process:hasInput>
+                  <process:Input rdf:ID="SendEMAPhoneNumber_PatientGpsPosition">
+                    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HealthInsuranceOntology.owl#GpsPosition</process:parameterType>
+                  </process:Input>
+                </process:hasInput>
+                <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SendEMAPhoneNumber</process:name>
+                <process:hasOutput>
+                  <process:Output rdf:ID="SendEMAPhoneNumber_EMAPhoneNumber">
+                    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/HealthInsuranceOntology.owl#TelephoneNumber</process:parameterType>
+                  </process:Output>
+                </process:hasOutput>
+              </process:AtomicProcess>
+            </grounding:owlsProcess>
+          </grounding:WsdlAtomicProcessGrounding>
+        </grounding:hasAtomicProcessGrounding>
+      </grounding:WsdlGrounding>
+    </service:supports>
+    <service:presents>
+      <profile:Profile rdf:ID="SendEMAPhoneNumber_Profile">
+        <service:presentedBy rdf:resource="#SendEMAPhoneNumber"/>
+        <profile:hasOutput rdf:resource="#SendEMAPhoneNumber_EMAPhoneNumber"/>
+        <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This service of a patient's health insurance send the calling patient a telephone number of the nearest emergency center (EMA)</profile:textDescription>
+        <profile:hasInput rdf:resource="#SendEMAPhoneNumber_PatientGpsPosition"/>
+        <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SendEMAPhoneNumber</profile:serviceName>
+      </profile:Profile>
+    </service:presents>
+    <service:describedBy rdf:resource="#SendEMAPhoneNumber_Model"/>
+  </service:Service>
+ </rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

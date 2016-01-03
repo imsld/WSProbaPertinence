@@ -188,15 +188,15 @@ public class Principale {
 				/**/
 				map = map / c.listRequetteFusion.size();
 				mapAgr = mapAgr + map;
-				System.out.println("liste des service fusion :");
+				//System.out.println("liste des service fusion :");
 				
 				/*for (int i = 0; i < c.listRequetteFusion.size(); i++) {
 					System.out.println(c.listRequetteFusion.get(i).getRequestName());
 					
 				}*/
 				
-				System.out.println(interval + ")MappLocal(" + ballillageK
-						+ ")= " + map);	
+				System.out.println(interval + ") MappLocal(" + ballillageK
+						+ ")= \t" + map);	
 			}
 			mapAgr = mapAgr / (interval+1);
 			

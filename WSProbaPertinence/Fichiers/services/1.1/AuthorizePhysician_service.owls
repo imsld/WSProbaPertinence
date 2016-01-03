@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns="http://127.0.0.1/services/1.1/AuthorizePhysician_service.owls#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:Pat="http://127.0.0.1/ontology/PatientOntology.owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/AuthorizePhysician_service.owls">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/PatientOntology.owl"/>
+  </owl:Ontology>
+  <process:Output rdf:ID="ContactEMA_AmbulanceArrivalTime">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#DateTime</process:parameterType>
+  </process:Output>
+  <process:Input rdf:ID="AuthorizePhysician_AuthorizationTimeInterval">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#DateTime</process:parameterType>
+  </process:Input>
+  <!-- <rdf:Description rdf:about="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue">
+    <expr:expressionBody rdf:parseType="Literal"><swrl:AtomList xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"></swrl:AtomList>
+  </expr:expressionBody>
+    <expr:expressionLanguage rdf:resource="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#SWRL"/>
+  </rdf:Description> -->
+  <process:Output rdf:ID="AcceptCostAndHealingPlan_CostAndHealingPlanAcceptanceAnswer">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#Acknowledgement</process:parameterType>
+  </process:Output>
+  <process:Output rdf:ID="AuthorizePhysician_PhysicianAuthorization">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#Authorization</process:parameterType>
+  </process:Output>
+  
+ <profile:Profile rdf:ID="AuthorizePhysician_Profile">
+    <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AuthorizePhysician</profile:serviceName>
+    <profile:hasInput rdf:resource="#AuthorizePhysician_AuthorizationTimeInterval"/>
+    <profile:hasInput>
+      <process:Input rdf:ID="AuthorizePhysician_PhysicianID">
+        <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#PhysicianID</process:parameterType>
+      </process:Input>
+    </profile:hasInput>
+    <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">If a doctor wants to see a patient's medical records, he must get an authorization before. This service handles physician authorizations.</profile:textDescription>
+    <service:presentedBy>
+      <service:Service rdf:ID="AuthorizePhysician">
+        <service:supports>
+          <grounding:WsdlGrounding rdf:ID="AuthorizePhysician_Grounding">
+            <grounding:hasAtomicProcessGrounding>
+              <grounding:WsdlAtomicProcessGrounding rdf:ID="AuthorizePhysician_WsdlAtomicProcessGrounding">
+                <grounding:owlsProcess>
+                  <process:AtomicProcess rdf:ID="AuthorizePhysician_Model">
+                    <process:hasInput>
+                      <process:Input rdf:ID="AuthorizePhysician_PatientMedicalRecords">
+                        <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/PatientOntology.owl#MedicalRecords</process:parameterType>
+                      </process:Input>
+                    </process:hasInput>
+                    <service:describes rdf:resource="#AuthorizePhysician"/>
+                    <process:hasInput rdf:resource="#AuthorizePhysician_PhysicianID"/>
+                    <process:hasOutput rdf:resource="#AuthorizePhysician_PhysicianAuthorization"/>
+                    <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AuthorizePhysician</process:name>
+                    <process:hasInput rdf:resource="#AuthorizePhysician_AuthorizationTimeInterval"/>
+                  </process:AtomicProcess>
+                </grounding:owlsProcess>
+              </grounding:WsdlAtomicProcessGrounding>
+            </grounding:hasAtomicProcessGrounding>
+            <service:supportedBy rdf:resource="#AuthorizePhysician"/>
+          </grounding:WsdlGrounding>
+        </service:supports>
+        <service:describedBy rdf:resource="#AuthorizePhysician_Model"/>
+        <service:presents rdf:resource="#AuthorizePhysician_Profile"/>
+      </service:Service>
+    </service:presentedBy>
+    <profile:hasOutput rdf:resource="#AuthorizePhysician_PhysicianAuthorization"/>
+    <profile:hasInput rdf:resource="#AuthorizePhysician_PatientMedicalRecords"/>
+  </profile:Profile>
+ </rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->

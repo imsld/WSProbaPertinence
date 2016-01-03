@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
+    xmlns="http://127.0.0.1/services/1.1/EmergencyPhysicianServices.owls#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:time="http://www.isi.edu/~pan/damltime/time-entry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:EmPhys="http://127.0.0.1/ontology/EmergencyPhysicianOntology.owl#"
+    xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+  xml:base="http://127.0.0.1/services/1.1/EmergencyPhysicianServices.owls">
+  
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/EmergencyPhysicianOntology.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Grounding.owl"/>
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/Profile.owl"/>
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrl.owl"/> -->
+    <!-- <owl:imports rdf:resource="http://www.daml.org/rules/proposal/swrlb.owl"/> -->
+  </owl:Ontology>
+  <process:Output rdf:ID="SelectOtherHospital_SelectedHospital">
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/EmergencyPhysicianOntology.owl#Hospital</process:parameterType>
+  </process:Output>
+  <grounding:WsdlAtomicProcessGrounding rdf:ID="SelectOtherHospital_WsdlAtomicProcessGrounding">
+    <grounding:owlsProcess>
+      <process:AtomicProcess rdf:ID="SelectOtherHospital_Model">
+        <process:hasOutput rdf:resource="#SelectOtherHospital_SelectedHospital"/>
+        <service:describes>
+          <service:Service rdf:ID="SelectOtherHospital">
+            <service:presents>
+              <profile:Profile rdf:ID="SelectOtherHospital_Profile">
+                <service:presentedBy rdf:resource="#SelectOtherHospital"/>
+                <profile:hasOutput rdf:resource="#SelectOtherHospital_SelectedHospital"/>
+                <profile:hasInput>
+                  <process:Input rdf:ID="SelectOtherHospital_HospitalListFromEMA">
+                    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://127.0.0.1/ontology/EmergencyPhysicianOntology.owl#ListOfHospitals</process:parameterType>
+                  </process:Input>
+                </profile:hasInput>
+                <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The service selects one hospital out of a list of hospitals</profile:textDescription>
+                <profile:serviceName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SelectOtherHospital</profile:serviceName>
+              </profile:Profile>
+            </service:presents>
+            <service:describedBy rdf:resource="#SelectOtherHospital_Model"/>
+            <service:supports>
+              <grounding:WsdlGrounding rdf:ID="SelectOtherHospital_Grounding">
+                <grounding:hasAtomicProcessGrounding rdf:resource="#SelectOtherHospital_WsdlAtomicProcessGrounding"/>
+                <service:supportedBy rdf:resource="#SelectOtherHospital"/>
+              </grounding:WsdlGrounding>
+            </service:supports>
+          </service:Service>
+        </service:describes>
+        <process:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SelectOtherHospital</process:name>
+        <process:hasInput rdf:resource="#SelectOtherHospital_HospitalListFromEMA"/>
+      </process:AtomicProcess>
+    </grounding:owlsProcess>
+  </grounding:WsdlAtomicProcessGrounding>  
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->
