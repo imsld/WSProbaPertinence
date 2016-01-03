@@ -75,6 +75,9 @@ public class Service {
 		this.tailleCluster = tailleCluster;
 	}
 
+	public void setIDRequete(String iDRequete) {
+		IDRequete = iDRequete;
+	}
 	public void setNbrServicePertinant(int nbrServicePertinant) {
 		this.nbrServicePertinant = nbrServicePertinant;
 	}

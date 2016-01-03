@@ -33,8 +33,9 @@ public class Request {
 	private List<Double> pourcentageServicePerResultEj = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
-	
+
 	List<Service> listServiceSD = new ArrayList<Service>();
+	int nbrService = 0;
 
 	private double probabilite = 0;
 
@@ -47,29 +48,32 @@ public class Request {
 	private Element racine;
 	private NodeList racineNoeuds;
 
-	private int K;
-	
-	public void trierListMapp(){
-		for (int i = 0; i < listServiceSD.size()-1; i++) {
+	public int K;
+
+	public void trierListMapp() {
+		
+		
+		
+		for (int i = 0; i < listServiceSD.size() - 1; i++) {
 			double score1 = listServiceSD.get(i).Score_SD;
-			for (int j = i+1; j < listServiceSD.size(); j++) {
+			for (int j = i + 1; j < listServiceSD.size(); j++) {
 				double score2 = listServiceSD.get(j).Score_SD;
-				if (score2 > score1){
-					listServiceSD.add(i,listServiceSD.remove(j));
+				if (score2 > score1) {
+					listServiceSD.add(i, listServiceSD.remove(j));
 					score1 = score2;
 				}
 			}
-			
 		}
+		
 	}
-	
+
 	public Request(String pathResult, String pathRelevanceSet, int requestID,
 			String requestName, int k) {
 		super();
 		this.requestID = requestID;
 		this.requestName = requestName;
 		this.pathResult = pathResult;
-		this.probabilite = probabilite;
+		// this.probabilite = probabilite;
 
 		this.K = k;
 
@@ -85,29 +89,23 @@ public class Request {
 		setResultEj(fileResult + "\\resultatej.xml");
 		setResultJs(fileResult + "\\resultatjs.xml");
 		setResultLog(fileResult + "\\resulatalog.xml");
+		setPourcentage();
 
-		// System.out.println("*******************************");
-		// System.out.println("ID de la requete :" + getRequestID());
-		// System.out.println("nom de la requete :" + getRequestName());
+	}
 
-		// System.out.println("nombre de services pertinants:"
-		// + getListRelevantSet().size());
-
-		// System.out.println("---------------- Cosinus : ---------------");
-		pourcentageServicePerResultCos = calculMethodeCluster(listResultCos,
-				(14 / k));
-		// System.out.println("---------------- EJ : ---------------");
-		pourcentageServicePerResultEj = calculMethodeCluster(listResultEj,
-				(14 / k));
-		// System.out.println("---------------- JS : ---------------");
-		pourcentageServicePerResultJs = calculMethodeCluster(listResultJs,
-				(14 / k));
-		// System.out.println("---------------- LI : ---------------");
-		pourcentageServicePerResultLi = calculMethodeCluster(listResultLi,
-				(14 / k));
-		// System.out.println("---------------- Log : ---------------");
-		pourcentageServicePerResultLog = calculMethodeCluster(listResultLog,
-				(14 / k));
+	public void setPourcentage() {
+		// TODO Auto-generated method stub
+		nbrService = listResultCos.size();
+		pourcentageServicePerResultCos.clear();
+		pourcentageServicePerResultCos = calculMethodeCluster(listResultCos);
+		pourcentageServicePerResultEj.clear();
+		pourcentageServicePerResultEj = calculMethodeCluster(listResultEj);
+		pourcentageServicePerResultJs.clear();
+		pourcentageServicePerResultJs = calculMethodeCluster(listResultJs);
+		pourcentageServicePerResultLi.clear();
+		pourcentageServicePerResultLi = calculMethodeCluster(listResultLi);
+		pourcentageServicePerResultLog.clear();
+		pourcentageServicePerResultLog = calculMethodeCluster(listResultLog);
 	}
 
 	public double getProbabilite() {
@@ -146,6 +144,8 @@ public class Request {
 
 					serviceNode = (Element) racineNoeuds.item(i);
 					iDService = serviceNode.getAttribute("ID");
+					iDService = iDService.substring(iDService.indexOf('*') + 1,
+							iDService.length());
 					iDRequete = requestName;
 					scoreInput = Double.parseDouble(serviceNode
 							.getAttribute("Input"));
@@ -157,10 +157,6 @@ public class Request {
 					Service service = new Service(iDService, iDRequete,
 							scoreInput, scoreOutput, moyenne);
 					listResultCos.add(service);
-
-					serviceNode
-							.setAttribute("ID_Sequ", Integer.toString(i + 1));
-
 				}
 			}
 			/*
@@ -449,24 +445,31 @@ public class Request {
 	 * 
 	 * }
 	 */
-	private List<Double> calculMethodeCluster(List<Service> listSerParMethode,
-			int interval) {
+	private List<Double> calculMethodeCluster(List<Service> listSerParMethode) {
 		int nbtotal = 0;
-		if (14 % K == 0)
-			interval = (14/K);
-		else
-			interval = (14/K)+1;
+		int rest = nbrService % K;
+		int interval = (nbrService / K);
+		int borneSup = -1;
 		List<Double> PSerPertinant = new ArrayList<Double>();
-		int borneSup = 0;
-		for (int pos = 0; pos < K; pos++) {
+		
+		if (rest != 0)
+			rest = rest + interval - 1;
 
-			int borneInf = interval * pos;			
-			if (pos == K - 1)
-				borneSup = borneInf +(14 % K)+1;
-			else
-			borneSup = (interval * (pos + 1))-1;
+		for (int pos = 0; pos < K; pos++) {
+			int borneInf = borneSup + 1;
+			
+			if (rest != 0) {
+				borneSup = borneInf + interval;
+				rest--;
+			} else
+				borneSup = borneInf + interval - 1;
+
+			if ((borneSup + 1) > (nbrService - 1)) {
+				borneSup = (nbrService - 1);
+			}
 
 			int totalServicePertinantInInterval = 0;
+			
 
 			if (nbtotal != listRelevantSet.size())
 				for (int j = borneInf; j <= borneSup; j++) {
@@ -490,5 +493,4 @@ public class Request {
 		}
 		return PSerPertinant;
 	}
-	
 }

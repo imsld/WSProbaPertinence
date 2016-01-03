@@ -11,7 +11,7 @@ public class ReadResults_And_RelevanceSet {
 	
 
 	private int totalResult;
-	private int k;
+	int k;
 
 	private List<Request> listRequests = new ArrayList<Request>();
 	private File repertoireResult;
@@ -25,6 +25,22 @@ public class ReadResults_And_RelevanceSet {
 		this.pathService = pathService;
 		this.k = k;
 		setTotalResult();
+		setListRequests();
+		setListServiceEntrepot();
+	}
+
+	public ReadResults_And_RelevanceSet(List<Service> resultCos,
+			List<Service> resultLi, List<Service> resultEj,
+			List<Service> resultJs, List<Service> resultLog,
+			List<Service> relevanceSet, int totalResult,
+			String pathResult, String pathRelevanceSet, int ballillageK) {
+		// TODO Auto-generated constructor stub
+		this.pathResult = pathResult;
+		this.pathRelevanceSet = pathRelevanceSet;
+		this.pathService = pathService;
+		this.k = k;
+		
+		this.totalResult = totalResult;
 		setListRequests();
 		setListServiceEntrepot();
 	}
