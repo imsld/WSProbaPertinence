@@ -10,7 +10,7 @@ public class Calculs {
 	List<Double> listScoreSD = new ArrayList<Double>();
 	double Score = 0;
 
-	public void getCalcul(int interval) {
+	public void getCalcul() {
 
 		for (int i = 0; i < listRequetteFusion.size(); i++) {
 			Request req = listRequetteFusion.get(i);

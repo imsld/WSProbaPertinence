@@ -41,7 +41,7 @@ public class Principale {
 				pathResult, pathRelevanceSet, pathService, 2);
 
 		for (ballillageK = 2; ballillageK < 1007; ballillageK++) {
-
+			
 			result.k = ballillageK;
 			for (int i = 0; i < result.getListRequests().size(); i++) {
 				result.getListRequests().get(i).K = ballillageK;
@@ -114,7 +114,7 @@ public class Principale {
 				List<Calculs> listCal = new ArrayList<Calculs>();
 				for (int i = 0; i < listCalculs.size(); i++) {
 					Calculs c = listCalculs.get(i);
-					c.getCalcul(interval);
+					c.getCalcul();
 					listCal.add(c);					
 					
 				}
@@ -173,7 +173,7 @@ public class Principale {
 					req.trierListMapp();
 					
 					double rend = 1;
-					double maploc = 0;
+					double maploc = 0;	
 					for (int i = 0; i < req.listServiceSD.size(); i++) {
 						Service ser = req.listServiceSD.get(i);
 						if (ser.isPertinant()) {
@@ -196,9 +196,9 @@ public class Principale {
 				}*/
 				
 				System.out.println(interval + ") MappLocal(" + ballillageK
-						+ ")= \t" + map);	
+						+ ")= " + map);	
 			}
-			mapAgr = mapAgr / (interval+1);
+			mapAgr = mapAgr / (interval);
 			
 			
 
