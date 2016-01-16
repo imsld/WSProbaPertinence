@@ -5,13 +5,12 @@ import java.util.List;
 public class ReadResults_And_RelevanceSet {
 	private String pathResult;
 	private String pathRelevanceSet;
-	private String typeRequestRelevanceSet;
 	private String pathService;
 	private List<Service> listServiceEntrepot = new ArrayList<Service>(); 
 	
 
 	private int totalResult;
-	int k;
+	private int nombreCluster;
 
 	private List<Request> listRequests = new ArrayList<Request>();
 	private File repertoireResult;
@@ -23,7 +22,7 @@ public class ReadResults_And_RelevanceSet {
 		this.pathResult = pathResult;
 		this.pathRelevanceSet = pathRelevanceSet;
 		this.pathService = pathService;
-		this.k = k;
+		this.nombreCluster = k;
 		setTotalResult();
 		setListRequests();
 		setListServiceEntrepot();
@@ -37,8 +36,6 @@ public class ReadResults_And_RelevanceSet {
 		// TODO Auto-generated constructor stub
 		this.pathResult = pathResult;
 		this.pathRelevanceSet = pathRelevanceSet;
-		this.pathService = pathService;
-		this.k = k;
 		
 		this.totalResult = totalResult;
 		setListRequests();
@@ -76,7 +73,7 @@ public class ReadResults_And_RelevanceSet {
 			if (f[i].isDirectory()) {
 				requestName = f[i].getName();
 				Request req = new Request(pathResult, pathRelevanceSet, i,
-						requestName, k);
+						requestName, nombreCluster);
 				listRequests.add(req);
 			}
 		}
@@ -97,8 +94,11 @@ public class ReadResults_And_RelevanceSet {
 	public List<Request> getListRequests() {
 		return listRequests;
 	}
+	public int getNombreCluster() {
+		return nombreCluster;
+	}
 
-	public int getK() {
-		return k;
+	public void setNombreCluster(int nombreCluster) {
+		this.nombreCluster = nombreCluster;
 	}
 }

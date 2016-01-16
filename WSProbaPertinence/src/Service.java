@@ -11,7 +11,7 @@ public class Service {
 	double calcul_D_Ej = 0;
 	double calcul_D_Js = 0;
 	double calcul_D_Log = 0;
-	double Score_SD = 0;
+	double calcul_D_ProbFuse = 0;
 	
 
 	private int tailleCluster = -1;

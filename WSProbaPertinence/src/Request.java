@@ -6,11 +6,6 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,18 +23,20 @@ public class Request {
 	private List<Service> listResultEj = new ArrayList<Service>();
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
+	private List<Service> listResultatProb = new ArrayList<Service>();
+	
 	private List<Double> pourcentageServicePerResultCos = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLi = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultEj = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
 
-	List<Service> listServiceSD = new ArrayList<Service>();
+	
 	int nbrService = 0;
 
 	private double probabilite = 0;
 
-	private String pathResult;
+	//private String pathResult;
 	private String fileResult;
 	private String fileRelevanceSet;
 	private DocumentBuilderFactory factory;
@@ -48,23 +45,21 @@ public class Request {
 	private Element racine;
 	private NodeList racineNoeuds;
 
-	public int K;
+	private int nombreCluster;
 
 	public void trierListMapp() {
-		
-		
-		
-		for (int i = 0; i < listServiceSD.size() - 1; i++) {
-			double score1 = listServiceSD.get(i).Score_SD;
-			for (int j = i + 1; j < listServiceSD.size(); j++) {
-				double score2 = listServiceSD.get(j).Score_SD;
+
+		for (int i = 0; i < listResultatProb.size() - 1; i++) {
+			double score1 = listResultatProb.get(i).calcul_D_ProbFuse;
+			for (int j = i + 1; j < listResultatProb.size(); j++) {
+				double score2 = listResultatProb.get(j).calcul_D_ProbFuse;
 				if (score2 > score1) {
-					listServiceSD.add(i, listServiceSD.remove(j));
+					listResultatProb.add(i, listResultatProb.remove(j));
 					score1 = score2;
 				}
 			}
 		}
-		
+
 	}
 
 	public Request(String pathResult, String pathRelevanceSet, int requestID,
@@ -72,10 +67,10 @@ public class Request {
 		super();
 		this.requestID = requestID;
 		this.requestName = requestName;
-		this.pathResult = pathResult;
+		//this.pathResult = pathResult;
 		// this.probabilite = probabilite;
 
-		this.K = k;
+		this.nombreCluster = k;
 
 		factory = DocumentBuilderFactory.newInstance();
 		fileResult = pathResult + "\\" + requestName;
@@ -94,16 +89,25 @@ public class Request {
 	}
 
 	public void setPourcentage() {
-		// TODO Auto-generated method stub
+		// Initialisation des tableaux de pourcentage de services pertinant pour
+		// chaque cluster, cela pour les 5 méthodes différentes
+		// on a 5 tableau (le nombre de méthodes), où la taille des tableau est
+		// identique (le nombre de cluster). et dans chaque case de tableau on
+		// sauvegarde le pourcentage de services pertinant du cluster
 		nbrService = listResultCos.size();
+
 		pourcentageServicePerResultCos.clear();
 		pourcentageServicePerResultCos = calculMethodeCluster(listResultCos);
+
 		pourcentageServicePerResultEj.clear();
 		pourcentageServicePerResultEj = calculMethodeCluster(listResultEj);
+
 		pourcentageServicePerResultJs.clear();
 		pourcentageServicePerResultJs = calculMethodeCluster(listResultJs);
+
 		pourcentageServicePerResultLi.clear();
 		pourcentageServicePerResultLi = calculMethodeCluster(listResultLi);
+
 		pourcentageServicePerResultLog.clear();
 		pourcentageServicePerResultLog = calculMethodeCluster(listResultLog);
 	}
@@ -440,24 +444,35 @@ public class Request {
 	 * 
 	 * xmlFile = new File(filePath);
 	 * 
-	 * } catch (Exception e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
+	 * } catch (Exception e) { e.printStackTrace(); }
 	 * 
 	 * }
 	 */
 	private List<Double> calculMethodeCluster(List<Service> listSerParMethode) {
+
+		// Méthode qui retourne un tbaleau de valuer de pourcentage de service
+		// pertinant dans chaque cluster. Exemple: si on a 14 services divisés
+		// sur 3 Clusters, le resultat de cette méthode sera un tableau de
+		// taille
+		// 3 dont chaque case contient le pourcentage de services pertinant de
+		// chaque cluster
+
 		int nbtotal = 0;
-		int rest = nbrService % K;
-		int interval = (nbrService / K);
+
 		int borneSup = -1;
 		List<Double> PSerPertinant = new ArrayList<Double>();
-		
+
+		// Calculer la taille des cluster d'une manière équitable
+		// exp : Si on 14 services et le nombre de cluster est de 3, on doit
+		// avoir la proportion suivante:5,5,4
+		int rest = nbrService % nombreCluster;
+		int interval = (nbrService / nombreCluster);
 		if (rest != 0)
 			rest = rest + interval - 1;
 
-		for (int pos = 0; pos < K; pos++) {
+		for (int pos = 0; pos < nombreCluster; pos++) {
 			int borneInf = borneSup + 1;
-			
+
 			if (rest != 0) {
 				borneSup = borneInf + interval;
 				rest--;
@@ -469,7 +484,6 @@ public class Request {
 			}
 
 			int totalServicePertinantInInterval = 0;
-			
 
 			if (nbtotal != listRelevantSet.size())
 				for (int j = borneInf; j <= borneSup; j++) {
@@ -489,8 +503,23 @@ public class Request {
 			double taille = (borneSup - borneInf) + 1;
 			double p = ((totalServicePertinantInInterval) / (taille));
 			PSerPertinant.add(p);
-
 		}
 		return PSerPertinant;
 	}
+
+	public int getNombreCluster() {
+		return nombreCluster;
+	}
+
+	public void setNombreCluster(int nombreCluster) {
+		this.nombreCluster = nombreCluster;
+	}
+	public List<Service> getListResultatProb() {
+		return listResultatProb;
+	}
+
+	public void setListResultatProb(List<Service> listResultatProb) {
+		this.listResultatProb = listResultatProb;
+	}
+
 }

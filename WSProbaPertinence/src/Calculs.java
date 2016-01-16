@@ -4,18 +4,28 @@ import java.util.List;
 public class Calculs {
 
 	Service service;
-	List<Double> D = new ArrayList<Double>();
+	// Tableau dont chaque case represente la moyenne d'apprentissage par
+	// rapport à une méthode.
+	private List<Double> MoyBaseApp = new ArrayList<Double>();
+	
 	List<Request> listRequetteApprentissage = new ArrayList<Request>();
 	List<Request> listRequetteFusion = new ArrayList<Request>();
 	List<Double> listScoreSD = new ArrayList<Double>();
 	double Score = 0;
+
+	// Dans cette classe on doit sauvegarder deux listes. La liste de requette
+	// d'apprentissage (listRequetteApprentissage) dont notre apprentissage sera
+	// effectué, et une 2eme liste (listRequetteFusion, ou base de calcul) dont
+	// le calcul sera effectuer.
+	// Remarque: dans le cas où la base d'apprentissage est la meme base dans le
+	// calcul, les deux listes sont identiques.
 
 	public void getCalcul() {
 
 		for (int i = 0; i < listRequetteFusion.size(); i++) {
 			Request req = listRequetteFusion.get(i);
 			// System.out.println(req.getRequestName());
-			int pos = 0;
+			int pos = -1;
 			for (int j = 0; j < req.getResultCos().size(); j++) {
 				String ser = req.getResultCos().get(j).getIDService();
 				ser = ser.substring(ser.indexOf('*') + 1, ser.length());
@@ -24,7 +34,7 @@ public class Calculs {
 					break;
 				}
 			}
-			Score = Score + (D.get(0) / pos);
+			Score = Score + (MoyBaseApp.get(0) / pos);
 
 			pos = 0;
 			for (int j = 0; j < req.getResultEj().size(); j++) {
@@ -35,7 +45,7 @@ public class Calculs {
 					break;
 				}
 			}
-			Score = Score + (D.get(1) / pos);
+			Score = Score + (MoyBaseApp.get(1) / pos);
 			pos = 0;
 			for (int j = 0; j < req.getResultJs().size(); j++) {
 				String ser = req.getResultJs().get(j).getIDService();
@@ -45,7 +55,7 @@ public class Calculs {
 					break;
 				}
 			}
-			Score = Score + (D.get(2) / pos);
+			Score = Score + (MoyBaseApp.get(2) / pos);
 
 			pos = 0;
 			for (int j = 0; j < req.getResultLi().size(); j++) {
@@ -56,7 +66,7 @@ public class Calculs {
 					break;
 				}
 			}
-			Score = Score + (D.get(3) / pos);
+			Score = Score + (MoyBaseApp.get(3) / pos);
 
 			pos = 0;
 			for (int j = 0; j < req.getResultLog().size(); j++) {
@@ -67,7 +77,7 @@ public class Calculs {
 					break;
 				}
 			}
-			Score = Score + (D.get(4) / pos);
+			Score = Score + (MoyBaseApp.get(4) / pos);
 
 			// System.out.println("Score("+ service.getIDService()
 			// +")="+Score );
@@ -78,5 +88,13 @@ public class Calculs {
 			Score = 0;
 
 		}
+	}
+	
+	public List<Double> getMoyBaseApp() {
+		return MoyBaseApp;
+	}
+
+	public void setMoyBaseApp(List<Double> moyBaseApp) {
+		MoyBaseApp = moyBaseApp;
 	}
 }
