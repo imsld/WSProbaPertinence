@@ -6,6 +6,11 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,19 +29,18 @@ public class Request {
 	private List<Service> listResultJs = new ArrayList<Service>();
 	private List<Service> listResultLog = new ArrayList<Service>();
 	private List<Service> listResultatProb = new ArrayList<Service>();
-	
+
 	private List<Double> pourcentageServicePerResultCos = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLi = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultEj = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
 
-	
 	int nbrService = 0;
 
 	private double probabilite = 0;
 
-	//private String pathResult;
+	// private String pathResult;
 	private String fileResult;
 	private String fileRelevanceSet;
 	private DocumentBuilderFactory factory;
@@ -46,6 +50,32 @@ public class Request {
 	private NodeList racineNoeuds;
 
 	private int nombreCluster;
+
+	public void saveInXMLFile() throws ParserConfigurationException {
+		trierListMapp();
+		String filePath = fileResult + "\\resulatsProb.xml";
+		File xmlFile = null;
+		Document doc = null;
+		DocumentBuilder dBuilder;
+		DocumentBuilderFactory dbFactory;
+		dbFactory = DocumentBuilderFactory.newInstance();
+
+		dBuilder = dbFactory.newDocumentBuilder();
+		doc = dBuilder.newDocument();
+		Element racine = doc.createElement("base_serv");
+		doc.appendChild(racine);
+		doc.getDocumentElement().normalize();
+		for (int i = 0; i < listResultatProb.size(); i++) {
+			Element serviceElt = doc.createElement("service");
+			serviceElt.setAttribute("ID", listResultatProb.get(i).getIDService());
+			serviceElt.setAttribute("Prob", Double.toString(listResultatProb.get(i).calcul_D_ProbFuse));
+			serviceElt.setAttribute("pertinant", Boolean.toString(listResultatProb.get(i).isPertinant()));
+			racine.appendChild(serviceElt);
+		}
+		//
+		doc.getDocumentElement().normalize();
+		writeInFile(doc, xmlFile, filePath);
+	}
 
 	public void trierListMapp() {
 
@@ -67,7 +97,7 @@ public class Request {
 		super();
 		this.requestID = requestID;
 		this.requestName = requestName;
-		//this.pathResult = pathResult;
+		// this.pathResult = pathResult;
 		// this.probabilite = probabilite;
 
 		this.nombreCluster = k;
@@ -514,12 +544,41 @@ public class Request {
 	public void setNombreCluster(int nombreCluster) {
 		this.nombreCluster = nombreCluster;
 	}
+
 	public List<Service> getListResultatProb() {
 		return listResultatProb;
 	}
 
 	public void setListResultatProb(List<Service> listResultatProb) {
 		this.listResultatProb = listResultatProb;
+	}
+
+	private static void writeInFile(Document doc, File xmlFile, String filePath) {
+		// for output to file, console
+		TransformerFactory transformerFactory = TransformerFactory
+				.newInstance();
+		Transformer transformer;
+
+		try {
+			transformer = transformerFactory.newTransformer();
+			// for pretty print
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			DOMSource source = new DOMSource(doc);
+
+			// write to console or file
+			// StreamResult console = new StreamResult(System.out);
+			StreamResult file = new StreamResult(new File(filePath));
+
+			// write data
+			// transformer.transform(source, console);
+			transformer.transform(source, file);
+
+			xmlFile = new File(filePath);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

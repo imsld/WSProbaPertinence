@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 public class Principale {
 
 	// Variables concernant le chemin relatif des fichiers XML
@@ -44,8 +46,8 @@ public class Principale {
 
 		// pour balayer tout les cas possible, dans cette boucle on limite K à
 		// 500, c a d le max sera 1007/500
-		int ballillageK = 5;
-		for (ballillageK = 2; ballillageK < 500; ballillageK++){
+		int ballillageK = 100;
+		/*for (ballillageK = 2; ballillageK < 500; ballillageK++)*/{
 
 			double R_moy = 0;
 			double P_moy = 0;
@@ -176,7 +178,12 @@ public class Principale {
 
 					
 
-					req.trierListMapp();
+					try {
+						req.saveInXMLFile();
+					} catch (ParserConfigurationException e) {
+						e.printStackTrace();
+					}
+					//req.trierListMapp();
 					
 					double Vp = 0;
 					double Fp = 0;
@@ -250,8 +257,8 @@ public class Principale {
 				 * }
 				 */
 
-				System.out.println(interval + ") MappLocal(" + ballillageK
-						+ ")= " + map);
+				/*System.out.println(interval + ") MappLocal(" + ballillageK
+						+ ")= " + map);*/
 				/*System.out.println(interval + ") MappLocalLi(" + ballillageK
 						+ ")= " + mapLi);*/
 			}
@@ -259,7 +266,7 @@ public class Principale {
 			mapAgrLi = mapAgrLi / (interval);
 
 			System.out.println("\t MappAgre(" + ballillageK + ")= " + mapAgr
-					+ "\n ================");
+					/*+ "\n ================"*/);
 			/*System.out.println("\t MappAgreLi(" + ballillageK + ")= "
 					+ mapAgrLi + "\n ================");*/
 
