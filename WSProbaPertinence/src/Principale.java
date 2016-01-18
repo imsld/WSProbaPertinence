@@ -66,13 +66,11 @@ public class Principale {
 			int nbService = result.getListServiceEntrepot().size();
 
 			double mapAgr = 0;
-			double mapAgrLi = 0;
 			int interval = 0;
 
 			for (interval = 0; interval < 1; interval++) {
 				List<Calculs> listCalculs = new ArrayList<Calculs>();
 				double map = 0;
-				double mapLi = 0;
 
 				for (int i = 0; i < nbService; i++) {
 					Service ser = result.getListServiceEntrepot().get(i);
@@ -179,106 +177,33 @@ public class Principale {
 					
 
 					try {
-						req.saveInXMLFile();
+						
+						req.saveInXMLFile(true);
 					} catch (ParserConfigurationException e) {
 						e.printStackTrace();
 					}
-					//req.trierListMapp();
-					
-					double Vp = 0;
-					double Fp = 0;
-					double Fn = 0;
 
-					int pas = 10;
-					for (int j = 0; j < pas; j++) {
-						Service ser = req.getListResultatProb().get(j);
-						/*System.out.println("Serive (" + j + ")"
-								+ ser.getIDService());*/
-						if (ser.isPertinant())
-							Vp = Vp + 1;
-					}
-					Fp = pas - Vp;
-					Fn = req.getListRelevantSet().size() - Vp;
-					/*System.out.println("requette: " + req.getRequestName());
-					System.out.println("Nbre service pert : "
-							+ req.getListRelevantSet().size());*/
-					double P = Vp / (Vp + Fp);
-					double R = Vp / (Vp + Fn);
-					/*System.out.println("P(" + pas + ")=" + P + " ,R(" + pas
-							+ ")=" + R);*/
+					req.calculPrecision(10, true);
+					R_moy = R_moy + req.getRappel();
+					P_moy = P_moy + req.getPrecision();
 
-					R_moy = R_moy + R;
-					P_moy = P_moy + P;
-
-					double rend = 1;
-					double maploc = 0;
-					for (int i = 0; i < req.getListResultatProb().size(); i++) {
-						Service ser = req.getListResultatProb().get(i);
-						if (ser.isPertinant()) {
-							double div = (rend / (i + 1));
-							maploc = maploc + div;
-							rend++;
-
-						}
-					}
-					/******************/
-					double rendLi = 1;
-					double maplocLi = 0;
-					for (int i = 0; i < req.getResultLi().size(); i++) {
-						Service ser = req.getResultLi().get(i);
-						if (ser.isPertinant()) {
-							double div = (rendLi / (i + 1));
-							maplocLi = maplocLi + div;
-							rendLi++;
-
-						}
-					}
-					mapLi = mapLi + (maplocLi / (rendLi - 1));
-					/*****************/
-
-					map = map + (maploc / (rend - 1));
-
+					double mapLoc = req.getMappLocal(false);										
+					map = map + mapLoc;
 				}
-				/**/
 				map = map / c.listRequetteFusion.size();
 
 				mapAgr = mapAgr + map;
 
-				mapLi = mapLi / c.listRequetteFusion.size();
-				mapAgrLi = mapAgrLi + mapLi;
-
-				// System.out.println("liste des service fusion :");
-
-				/*
-				 * for (int i = 0; i < c.listRequetteFusion.size(); i++) {
-				 * System
-				 * .out.println(c.listRequetteFusion.get(i).getRequestName());
-				 * 
-				 * }
-				 */
-
-				/*System.out.println(interval + ") MappLocal(" + ballillageK
-						+ ")= " + map);*/
-				/*System.out.println(interval + ") MappLocalLi(" + ballillageK
-						+ ")= " + mapLi);*/
 			}
 			mapAgr = mapAgr / (interval);
-			mapAgrLi = mapAgrLi / (interval);
 
-			System.out.println("\t MappAgre(" + ballillageK + ")= " + mapAgr
-					/*+ "\n ================"*/);
-			/*System.out.println("\t MappAgreLi(" + ballillageK + ")= "
-					+ mapAgrLi + "\n ================");*/
-
-			/*System.out.println("P(moy)=" + P_moy / 29 + " ,R(moy)=" + R_moy
-					/ 29);*/
-
+			System.out.println("\t MappAgre(" + ballillageK + ")= " + mapAgr);
+			
 			if (mapAgr > MeilleurMap) {
 				MeilleurMap = mapAgr;
 				posMeilleurMap = ballillageK;
 			}
 		}
-		// ///////////////////
 		System.out.println("Meilleur map : ============>Mapp(" + posMeilleurMap
 				+ ")= " + MeilleurMap);
 

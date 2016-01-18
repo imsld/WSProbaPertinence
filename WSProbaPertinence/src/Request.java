@@ -36,11 +36,12 @@ public class Request {
 	private List<Double> pourcentageServicePerResultJs = new ArrayList<Double>();
 	private List<Double> pourcentageServicePerResultLog = new ArrayList<Double>();
 
+	private double Rappel = 0;
+	private double Precision = 0;
+
 	int nbrService = 0;
 
-	private double probabilite = 0;
 
-	// private String pathResult;
 	private String fileResult;
 	private String fileRelevanceSet;
 	private DocumentBuilderFactory factory;
@@ -51,8 +52,55 @@ public class Request {
 
 	private int nombreCluster;
 
-	public void saveInXMLFile() throws ParserConfigurationException {
-		trierListMapp();
+	public double getRappel() {
+		return Rappel;
+	}
+
+	public double getPrecision() {
+		return Precision;
+	}
+
+	public double getMappLocal(boolean trieListProb) {
+		if (trieListProb)
+			trierListMapp();
+		double rend = 1;
+		double maploc = 0;
+		for (int i = 0; i < listResultatProb.size(); i++) {
+			Service ser = listResultatProb.get(i);
+			if (ser.isPertinant()) {
+				double div = (rend / (i + 1));
+				maploc = maploc + div;
+				rend++;
+
+			}
+		}
+		return maploc / (rend - 1);
+	}
+	
+	public void calculPrecision(int pas, boolean trieListProb) {
+		if (trieListProb)
+			trierListMapp();
+
+		double Vp = 0;
+		double Fp = 0;
+		double Fn = 0;
+
+		for (int j = 0; j < pas; j++) {
+			Service ser = listResultatProb.get(j);
+			if (ser.isPertinant())
+				Vp = Vp + 1;
+		}
+		Fp = pas - Vp;
+		Fn = listRelevantSet.size() - Vp;
+		Precision = Vp / (Vp + Fp);
+		Rappel = Vp / (Vp + Fn);
+
+	}
+
+	public void saveInXMLFile(boolean trieListProb)
+			throws ParserConfigurationException {
+		if (trieListProb)
+			trierListMapp();
 		String filePath = fileResult + "\\resulatsProb.xml";
 		File xmlFile = null;
 		Document doc = null;
@@ -63,16 +111,33 @@ public class Request {
 		dBuilder = dbFactory.newDocumentBuilder();
 		doc = dBuilder.newDocument();
 		Element racine = doc.createElement("base_serv");
+
+		String map = "Map_"+nombreCluster+"_";
+		racine.setAttribute(map, Double.toString(getMappLocal(false)));
+		calculPrecision(10, false);
+		racine.setAttribute("Precision_10", Double.toString(Precision));
+		racine.setAttribute("Rappel_10", Double.toString(Rappel));
+
+		calculPrecision(20, false);
+		racine.setAttribute("Precision_20", Double.toString(Precision));
+		racine.setAttribute("Rappel_20", Double.toString(Rappel));
+
+		calculPrecision(30, false);
+		racine.setAttribute("Precision_30", Double.toString(Precision));
+		racine.setAttribute("Rappel_30", Double.toString(Rappel));
+
 		doc.appendChild(racine);
 		doc.getDocumentElement().normalize();
 		for (int i = 0; i < listResultatProb.size(); i++) {
 			Element serviceElt = doc.createElement("service");
-			serviceElt.setAttribute("ID", listResultatProb.get(i).getIDService());
-			serviceElt.setAttribute("Prob", Double.toString(listResultatProb.get(i).calcul_D_ProbFuse));
-			serviceElt.setAttribute("pertinant", Boolean.toString(listResultatProb.get(i).isPertinant()));
+			serviceElt.setAttribute("ID", listResultatProb.get(i)
+					.getIDService());
+			serviceElt.setAttribute("Prob",
+					Double.toString(listResultatProb.get(i).calcul_D_ProbFuse));
+			serviceElt.setAttribute("pertinant",
+					Boolean.toString(listResultatProb.get(i).isPertinant()));
 			racine.appendChild(serviceElt);
 		}
-		//
 		doc.getDocumentElement().normalize();
 		writeInFile(doc, xmlFile, filePath);
 	}
@@ -142,13 +207,6 @@ public class Request {
 		pourcentageServicePerResultLog = calculMethodeCluster(listResultLog);
 	}
 
-	public double getProbabilite() {
-		return probabilite;
-	}
-
-	public void setProbabilite(double probabilite) {
-		this.probabilite = probabilite;
-	}
 
 	private void setlistRelevantSet(String fileRelevanceSet) {
 
@@ -580,5 +638,7 @@ public class Request {
 			e.printStackTrace();
 		}
 	}
+
+	
 
 }
